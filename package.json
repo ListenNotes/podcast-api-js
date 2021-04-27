@@ -1,6 +1,6 @@
 {
   "name": "podcast-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "JavaScript bindings for the Listen Notes Podcast API",
   "main": "src/PodcastApiClient.js",
   "scripts": {
@@ -17,7 +17,6 @@
     "podcast search",
     "search engine"
   ],
-  "type": "module",
   "engines": {
     "node": ">=10.*"
   },

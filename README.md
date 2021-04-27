@@ -39,7 +39,7 @@ value:
 
 <!-- prettier-ignore -->
 ```js
-import Client from 'podcast-api';
+const Client = require('podcast-api').Client;
 
 const client = new Client({
   apiKey: process.env.LISTEN_API_KEY || null,

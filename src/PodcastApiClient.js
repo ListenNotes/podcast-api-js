@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 
 const API_BASE_PROD = 'https://listen-api.listennotes.com/api/v2';
 
@@ -6,8 +6,7 @@ const API_BASE_TEST = 'https://listen-api-test.listennotes.com/api/v2';
 
 const defaultUserAgent = 'podcasts-api-js';
 
-export default class PodcastApiClient {
-  constructor(config = {}) {
+const Client = function(config = {}) {
     this.config = config;
 
     axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -19,120 +18,121 @@ export default class PodcastApiClient {
         'User-Agent': config.userAgent || defaultUserAgent,
       },
     });
-  }
 
-  search(params) {
+  this.search = function(params) {
     return this.httpClient.get('/search', {
       params,
     });
-  }
+  };
 
-  typeahead(params) {
+  this.typeahead = function(params) {
     return this.httpClient.get('/search', {
       params,
     });
-  }
+  };
 
-  fetchBestPodcasts(params) {
+  this.fetchBestPodcasts = function(params) {
     return this.httpClient.get('/best_podcasts', {
       params,
     });
-  }
+  };
 
-  fetchPodcastById(params) {
+  this.fetchPodcastById = function(params) {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/podcasts/${id}`, {
       otherParams,
     });
-  }
+  };
 
-  fetchEpisodeById(params) {
+  this.fetchEpisodeById = function(params) {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/episodes/${id}`, {
       otherParams,
     });
-  }
+  };
 
-  batchFetchPodcasts(params) {
+  this.batchFetchPodcasts = function(params) {
     return this.httpClient.post('/podcasts', params);
-  }
+  };
 
-  batchFetchEpisodes(params) {
+  this.batchFetchEpisodes = function(params) {
     return this.httpClient.post('/episodes', params);
-  }
+  };
 
-
-  fetchCuratedPodcastsListById(params) {
+  this.fetchCuratedPodcastsListById = function(params) {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/curated_podcasts/${id}`, {
       otherParams,
     });
-  }
+  };
 
-  fetchCuratedPodcastsLists(params) {
+  this.fetchCuratedPodcastsLists = function(params) {
     return this.httpClient.get('/curated_podcasts', {
       params,
     });
-  }
+  };
 
-  fetchPodcastGenres(params) {
+  this.fetchPodcastGenres = function(params) {
     return this.httpClient.get('/genres', {
       params,
     });
-  }
+  };
 
-  fetchPodcastRegions(params) {
+  this.fetchPodcastRegions = function(params) {
     return this.httpClient.get('/regions', {
       params,
     });
-  }
+  };
 
-  fetchPodcastLanguages(params) {
+  this.fetchPodcastLanguages = function(params) {
     return this.httpClient.get('/languages', {
       params,
     });
-  }
+  };
 
-
-  justListen(params) {
-    return this.httpClient.get('/just_ldisten', {
+  this.justListen = function(params) {
+    return this.httpClient.get('/just_listen', {
       params,
     });
-  }
+  };
 
-  fetchRecommendationsForPodcast(params) {
+  this.fetchRecommendationsForPodcast = function(params) {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/podcasts/${id}/recommendations`, {
       otherParams,
     });
-  }
+  };
 
-  fetchRecommendationsForEpisode(params) {
+  this.fetchRecommendationsForEpisode = function(params) {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/episodes/${id}/recommendations`, {
       otherParams,
     });
-  }
+  };
 
-  fetchPlaylistById(params) {
+  this.fetchPlaylistById = function(params) {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/playlists/${id}`, {
       otherParams,
     });
-  }
+  };
 
-  fetchMyPlaylists(params) {
+  this.fetchMyPlaylists = function(params) {
     return this.httpClient.get('/playlists', {
       params,
     });
-  }
+  };
 
-  submitPodcast(params) {
+  this.submitPodcast = function (params) {
     return this.httpClient.post('/podcasts/submit', params);
-  }
+  };
 
-  deletePodcast(params) {
+  this.deletePodcast = function (params) {
     const { id, reason } = params;
     return this.httpClient.delete(`/podcasts/${id}?reason=${reason}`);
-  }
+  };
+};
+
+module.exports = {
+  Client,
 }
