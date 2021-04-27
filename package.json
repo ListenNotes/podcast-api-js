@@ -1,0 +1,33 @@
+{
+  "name": "podcast-api",
+  "version": "1.0.1",
+  "description": "JavaScript bindings for the Listen Notes Podcast API",
+  "main": "src/PodcastApiClient.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ListenNotes/podcast-api-js.git"
+  },
+  "keywords": [
+    "Listen Notes",
+    "podcast",
+    "api",
+    "podcast search",
+    "search engine"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=10.*"
+  },
+  "author": "Listen Notes, Inc. <hello@listennotes.com> (https://www.listennotes.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ListenNotes/podcast-api-js/issues"
+  },
+  "homepage": "https://github.com/ListenNotes/podcast-api-js",
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}
