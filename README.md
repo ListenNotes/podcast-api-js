@@ -75,6 +75,6 @@ client.search({
 });
 ```
 
-If `apiKey` is None, then we'll connect to a [mock server](https://www.listennotes.com/api/tutorials/#faq0) that returns fake data for testing purposes.
+If `apiKey` is null, then we'll connect to a [mock server](https://www.listennotes.com/api/tutorials/#faq0) that returns fake data for testing purposes.
 
 You can see all available API endpoints and parameters on the API Docs page at [listennotes.com/api/docs/](https://www.listennotes.com/api/docs/). 
