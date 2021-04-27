@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const API_BASE_PROD = 'https://listen-api.listennotes.com/api/v2';
-// const API_BASE_PROD = 'http://dev.listennotes.com:8000/api/v2';
 
 const API_BASE_TEST = 'https://listen-api-test.listennotes.com/api/v2';
 
