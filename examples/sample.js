@@ -1,13 +1,13 @@
-const Client = require('podcast-api').Client;
+const { Client } = require('podcast-api');
 
-const client = new Client({
+const client = Client({
   apiKey: process.env.LISTEN_API_KEY || null,
 });
 
 client.search({
   q: 'elon musk',
 }).then((response) => {
-  console.log(response.data);
+  console.log(response.data); // eslint-disable-line
 }).catch((error) => {
   if (error.response) {
     switch (error.response.status) {
@@ -30,7 +30,7 @@ client.search({
   } else {
     // Failed to connect to Listen API servers
   }
-  console.log(error);
+  console.log(error);  // eslint-disable-line
 });
 
 // client.typeahead({
@@ -65,7 +65,7 @@ client.search({
 // });
 
 // client.batchFetchPodcasts({
-//   ids: '3302bc71139541baa46ecb27dbf6071a,68faf62be97149c280ebcc25178aa731,37589a3e121e40debe4cef3d9638932a,9cf19c590ff0484d97b18b329fed0c6a',
+//   ids: '3302bc71139541baa46ecb27dbf6071a,68faf62be97149c280ebcc25178aa731
 // }).then((response) => {
 //   console.log(response.data);
 // }).catch((error) => {

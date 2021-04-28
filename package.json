@@ -4,7 +4,8 @@
   "description": "JavaScript bindings for the Listen Notes Podcast API",
   "main": "src/PodcastApiClient.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rm -rf ./.nyc_output ./node_modules/.cache",
+    "lint": "eslint --ext .js,.jsx ."
   },
   "repository": {
     "type": "git",
@@ -28,5 +29,12 @@
   "homepage": "https://github.com/ListenNotes/podcast-api-js",
   "dependencies": {
     "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.25.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "mocha": "^8.3.2",
+    "prettier": "^2.2.1"
   }
 }

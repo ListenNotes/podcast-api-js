@@ -7,7 +7,7 @@ applications written in server-side JavaScript.
 
 Simple and no-nonsense podcast search & directory API. Search the meta data of all podcasts and episodes by people, places, or topics.
 
-We don't recommend using Listen API in client-side JavaScript in the browser, because it'll leak your API key in the code. 
+We don't recommend using Listen API in client-side JavaScript in the browser, because it'll leak your API key in the code.
 
 <a href="https://www.listennotes.com/api/"><img src="https://raw.githubusercontent.com/ListenNotes/ListenApiDemo/master/web/src/powered_by_listennotes.png" width="300" /></a>
 
@@ -39,9 +39,9 @@ value:
 
 <!-- prettier-ignore -->
 ```js
-const Client = require('podcast-api').Client;
+const { Client } = require('podcast-api');
 
-const client = new Client({
+const client = Client({
   apiKey: process.env.LISTEN_API_KEY || null,
 });
 
@@ -77,4 +77,4 @@ client.search({
 
 If `apiKey` is null, then we'll connect to a [mock server](https://www.listennotes.com/api/tutorials/#faq0) that returns fake data for testing purposes.
 
-You can see all available API endpoints and parameters on the API Docs page at [listennotes.com/api/docs/](https://www.listennotes.com/api/docs/). 
+You can see all available API endpoints and parameters on the API Docs page at [listennotes.com/api/docs/](https://www.listennotes.com/api/docs/).
