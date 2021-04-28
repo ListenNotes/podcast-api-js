@@ -89,6 +89,8 @@ const Client = (config = {}) => {
     const { id, reason } = params;
     return this.httpClient.delete(`/podcasts/${id}?reason=${reason}`);
   };
+
+  return this;
 };
 
 module.exports = {
