@@ -1,12 +1,17 @@
 {
   "name": "podcast-api",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "JavaScript bindings for the Listen Notes Podcast API",
   "main": "src/PodcastApiClient.js",
   "scripts": {
     "clean": "rm -rf ./.nyc_output ./node_modules/.cache",
-    "lint": "eslint --ext .js,.jsx ."
+    "lint": "eslint --ext .js,.jsx .",
+    "test": "jest"
   },
+  "jest": {
+    "testMatch": ["**/tests/*Test.js"],
+    "testEnvironment": "node"
+  },  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ListenNotes/podcast-api-js.git"
@@ -34,6 +39,7 @@
     "eslint": "^7.25.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
+    "jest": "^26.6.3",
     "mocha": "^8.3.2",
     "prettier": "^2.2.1"
   }

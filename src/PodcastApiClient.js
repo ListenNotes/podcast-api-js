@@ -21,7 +21,7 @@ const Client = (config = {}) => {
 
   this.search = (params) => this.httpClient.get('/search', { params });
 
-  this.typeahead = (params) => this.httpClient.get('/search', { params });
+  this.typeahead = (params) => this.httpClient.get('/typeahead', { params });
 
   this.fetchBestPodcasts = (params) => this.httpClient.get('/best_podcasts', { params });
 
