@@ -9,10 +9,12 @@ Simple and no-nonsense podcast search & directory API. Search the meta data of a
 
 **Note**: We don't recommend using Listen API in client-side JavaScript in the browser, because it'll leak your API key in the code.
 
+If you have any questions, please contact [hello@listennotes.com](hello@listennotes.com?subject=Questions+about+the+JS+SDK+of+Listen+API)
+
 <a href="https://www.listennotes.com/api/"><img src="https://raw.githubusercontent.com/ListenNotes/ListenApiDemo/master/web/src/powered_by_listennotes.png" width="300" /></a>
 
 
-Table of Contents
+**Table of Contents**
 - [Podcast API JavaScript Library](#podcast-api-javascript-library)
   - [Installation](#installation)
     - [Requirements](#requirements)
