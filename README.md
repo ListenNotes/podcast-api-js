@@ -12,6 +12,33 @@ Simple and no-nonsense podcast search & directory API. Search the meta data of a
 <a href="https://www.listennotes.com/api/"><img src="https://raw.githubusercontent.com/ListenNotes/ListenApiDemo/master/web/src/powered_by_listennotes.png" width="300" /></a>
 
 
+Table of Contents
+- [Podcast API JavaScript Library](#podcast-api-javascript-library)
+  - [Installation](#installation)
+    - [Requirements](#requirements)
+  - [Usage](#usage)
+  - [API Reference](#api-reference)
+    - [Full-text search](#full-text-search)
+    - [Typeahead search](#typeahead-search)
+    - [Fetch detailed meta data and episodes for a podcast by id](#fetch-detailed-meta-data-and-episodes-for-a-podcast-by-id)
+    - [Fetch detailed meta data for an episode by id](#fetch-detailed-meta-data-for-an-episode-by-id)
+    - [Fetch a list of supported languages for podcasts](#fetch-a-list-of-supported-languages-for-podcasts)
+    - [Fetch a list of podcast genres](#fetch-a-list-of-podcast-genres)
+    - [Fetch a list of best podcasts by genre](#fetch-a-list-of-best-podcasts-by-genre)
+    - [Fetch a list of supported countries/regions for best podcasts](#fetch-a-list-of-supported-countriesregions-for-best-podcasts)
+    - [Fetch recommendations for a podcast](#fetch-recommendations-for-a-podcast)
+    - [Fetch recommendations for an episode](#fetch-recommendations-for-an-episode)
+    - [Batch fetch basic meta data for episodes](#batch-fetch-basic-meta-data-for-episodes)
+    - [Batch fetch basic meta data for podcasts](#batch-fetch-basic-meta-data-for-podcasts)
+    - [Fetch a random podcast episode](#fetch-a-random-podcast-episode)
+    - [Fetch a curated list of podcasts by id](#fetch-a-curated-list-of-podcasts-by-id)
+    - [Fetch curated lists of podcasts](#fetch-curated-lists-of-podcasts)
+    - [Submit a podcast to Listen Notes database](#submit-a-podcast-to-listen-notes-database)
+    - [Request to delete a podcast](#request-to-delete-a-podcast)
+    - [Fetch a playlist&#x27;s info and items (i.e., episodes or podcasts).](#fetch-a-playlists-info-and-items-ie-episodes-or-podcasts)
+    - [Fetch a list of your playlists.](#fetch-a-list-of-your-playlists)
+
+
 ## Installation
 
 Install [the official NPM package](https://www.npmjs.com/package/podcast-api) of the Listen Notes Podcast API:
