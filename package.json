@@ -1,6 +1,6 @@
 {
   "name": "podcast-api",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "JavaScript bindings for the Listen Notes Podcast API",
   "main": "src/PodcastApiClient.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "jest": {
     "testMatch": ["**/tests/*Test.js"],
     "testEnvironment": "node"
-  },  
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ListenNotes/podcast-api-js.git"
