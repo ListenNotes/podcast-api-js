@@ -12,7 +12,7 @@ const Client = (config = {}) => {
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
   this.httpClient = axios.create({
     baseURL: config.apiKey ? API_BASE_PROD : API_BASE_TEST,
-    timeout: 10000,
+    timeout: 30000,
     headers: {
       'X-ListenAPI-Key': config.apiKey || '',
       'User-Agent': config.userAgent || defaultUserAgent,
