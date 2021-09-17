@@ -65,7 +65,8 @@ client.search({
 // });
 
 // client.batchFetchPodcasts({
-//   ids: '3302bc71139541baa46ecb27dbf6071a,68faf62be97149c280ebcc25178aa731
+//   ids: '3302bc71139541baa46ecb27dbf6071a,68faf62be97149c280ebcc25178aa731',
+//   itunes_ids: '1514235382',
 // }).then((response) => {
 //   console.log(response.data);
 // }).catch((error) => {

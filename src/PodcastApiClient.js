@@ -1,4 +1,5 @@
 const axios = require('axios');
+const queryString = require('query-string');
 
 const API_BASE_PROD = 'https://listen-api.listennotes.com/api/v2';
 
@@ -18,6 +19,8 @@ const Client = (config = {}) => {
       'User-Agent': config.userAgent || defaultUserAgent,
     },
   });
+
+  this._post = (path, params) => this.httpClient.post(path, queryString.stringify(params));
 
   this.search = (params) => this.httpClient.get('/search', { params });
 
@@ -39,9 +42,9 @@ const Client = (config = {}) => {
     });
   };
 
-  this.batchFetchPodcasts = (params) => this.httpClient.post('/podcasts', params);
+  this.batchFetchPodcasts = (params) => this._post('/podcasts', params);
 
-  this.batchFetchEpisodes = (params) => this.httpClient.post('/episodes', params);
+  this.batchFetchEpisodes = (params) => this._post('/episodes', params);
 
   this.fetchCuratedPodcastsListById = (params) => {
     const { id, ...otherParams } = params;
@@ -83,7 +86,7 @@ const Client = (config = {}) => {
 
   this.fetchMyPlaylists = (params) => this.httpClient.get('/playlists', { params });
 
-  this.submitPodcast = (params) => this.httpClient.post('/podcasts/submit', params);
+  this.submitPodcast = (params) => this._post('/podcasts/submit', params);
 
   this.deletePodcast = (params) => {
     const { id, reason } = params;

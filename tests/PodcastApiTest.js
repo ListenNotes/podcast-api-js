@@ -1,4 +1,5 @@
 const { Client } = require('podcast-api');
+const queryString = require('query-string');
 
 test('Test search endpoint with mock', () => {
     const client = Client();
@@ -6,9 +7,9 @@ test('Test search endpoint with mock', () => {
     return client.search({
         q: term,
     }).then((response) => {
-        expect(response.config.params.q).toBe(term);        
-        expect(response.config.url).toBe('/search');  
-        expect(response.config.method).toBe('get');              
+        expect(response.config.params.q).toBe(term);
+        expect(response.config.url).toBe('/search');
+        expect(response.config.method).toBe('get');
         expect(response.data.count > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
@@ -22,7 +23,7 @@ test('Test search endpoint with authentication error', () => {
     return client.search({
         q: 'elon musk',
     }).then((response) => {
-        fail('It should not have come here!')        
+        fail('It should not have come here!')
     }).catch((error) => {
         if (error.response) {
             switch (error.response.status) {
@@ -30,12 +31,12 @@ test('Test search endpoint with authentication error', () => {
                 // PASS
                 break;
               default:
-                fail('It should not have come here!')                  
+                fail('It should not have come here!')
                 break;
             }
           } else {
-            fail('It should not have come here!')              
-          }        
+            fail('It should not have come here!')
+          }
     });
 });
 
@@ -46,10 +47,10 @@ test('Test typeahead with mock', () => {
         q: term,
         show_podcasts: 1,
     }).then((response) => {
-        expect(response.config.params.q).toBe(term);        
-        expect(response.config.params.show_podcasts).toBe(1);         
-        expect(response.config.url).toBe('/typeahead');  
-        expect(response.config.method).toBe('get');              
+        expect(response.config.params.q).toBe(term);
+        expect(response.config.params.show_podcasts).toBe(1);
+        expect(response.config.url).toBe('/typeahead');
+        expect(response.config.method).toBe('get');
         expect(response.data.terms.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
@@ -62,9 +63,9 @@ test('Test fetchBestPodcasts with mock', () => {
     return client.fetchBestPodcasts({
         genre_id: genreId,
     }).then((response) => {
-        expect(response.config.params.genre_id).toBe(genreId);        
-        expect(response.config.url).toBe('/best_podcasts');  
-        expect(response.config.method).toBe('get');              
+        expect(response.config.params.genre_id).toBe(genreId);
+        expect(response.config.url).toBe('/best_podcasts');
+        expect(response.config.method).toBe('get');
         expect(response.data.total > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
@@ -78,7 +79,7 @@ test('Test fetchPodcastById with mock', () => {
         id: podcastId,
     }).then((response) => {
         expect(response.config.url).toBe(`/podcasts/${podcastId}`);
-        expect(response.config.method).toBe('get');              
+        expect(response.config.method).toBe('get');
         expect(response.data.episodes.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
@@ -92,7 +93,7 @@ test('Test fetchEpisodeById with mock', () => {
         id: episodeId,
     }).then((response) => {
         expect(response.config.url).toBe(`/episodes/${episodeId}`);
-        expect(response.config.method).toBe('get');              
+        expect(response.config.method).toBe('get');
         expect(response.data.podcast.rss.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
@@ -107,9 +108,9 @@ test('Test batchFetchPodcasts with mock', () => {
     }).then((response) => {
         expect(response.config.url).toBe('/podcasts');
         expect(response.config.method).toBe('post');
-        expect(JSON.parse(response.config.data).ids).toBe(ids);
-        expect(response.data.podcasts.length > 0).toBe(true);        
-    }).catch(() => {
+        expect(queryString.parse(response.config.data).ids).toBe(ids);
+        expect(response.data.podcasts.length > 0).toBe(true);
+    }).catch((e) => {
         fail('Failed!');
     });
 });
@@ -122,8 +123,8 @@ test('Test batchFetchEpisodes with mock', () => {
     }).then((response) => {
         expect(response.config.url).toBe('/episodes');
         expect(response.config.method).toBe('post');
-        expect(JSON.parse(response.config.data).ids).toBe(ids);
-        expect(response.data.episodes.length > 0).toBe(true);        
+        expect(queryString.parse(response.config.data).ids).toBe(ids);
+        expect(response.data.episodes.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
     });
@@ -137,7 +138,7 @@ test('Test fetchCuratedPodcastsListById with mock', () => {
     }).then((response) => {
         expect(response.config.url).toBe(`/curated_podcasts/${curatedListId}`);
         expect(response.config.method).toBe('get');
-        expect(response.data.podcasts.length > 0).toBe(true);        
+        expect(response.data.podcasts.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
     });
@@ -150,9 +151,9 @@ test('Test fetchCuratedPodcastsLists with mock', () => {
         page: 2,
     }).then((response) => {
         expect(response.config.url).toBe('/curated_podcasts');
-        expect(response.config.params.page).toBe(page);          
+        expect(response.config.params.page).toBe(page);
         expect(response.config.method).toBe('get');
-        expect(response.data.total > 0).toBe(true);        
+        expect(response.data.total > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
     });
@@ -165,9 +166,9 @@ test('Test fetchPodcastGenres with mock', () => {
         top_level_only: topLevelOnly,
     }).then((response) => {
         expect(response.config.url).toBe('/genres');
-        expect(response.config.params.top_level_only).toBe(topLevelOnly);          
+        expect(response.config.params.top_level_only).toBe(topLevelOnly);
         expect(response.config.method).toBe('get');
-        expect(response.data.genres.length > 0).toBe(true);        
+        expect(response.data.genres.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
     });
@@ -179,7 +180,7 @@ test('Test fetchPodcastRegions with mock', () => {
     }).then((response) => {
         expect(response.config.url).toBe('/regions');
         expect(response.config.method).toBe('get');
-        expect(response.data.regions).not.toBeNull();        
+        expect(response.data.regions).not.toBeNull();
     }).catch(() => {
         fail('Failed!');
     });
@@ -191,7 +192,7 @@ test('Test fetchPodcastLanguages with mock', () => {
     }).then((response) => {
         expect(response.config.url).toBe('/languages');
         expect(response.config.method).toBe('get');
-        expect(response.data.languages.length > 0).toBe(true);        
+        expect(response.data.languages.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
     });
@@ -203,7 +204,7 @@ test('Test justListen with mock', () => {
     }).then((response) => {
         expect(response.config.url).toBe('/just_listen');
         expect(response.config.method).toBe('get');
-        expect(response.data.audio_length_sec > 0).toBe(true);        
+        expect(response.data.audio_length_sec > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
     });
@@ -216,7 +217,7 @@ test('Test fetchRecommendationsForPodcast with mock', () => {
         id: podcastId,
     }).then((response) => {
         expect(response.config.url).toBe(`/podcasts/${podcastId}/recommendations`);
-        expect(response.config.method).toBe('get');              
+        expect(response.config.method).toBe('get');
         expect(response.data.recommendations.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
@@ -230,7 +231,7 @@ test('Test fetchRecommendationsForEpisode with mock', () => {
         id: episodeId,
     }).then((response) => {
         expect(response.config.url).toBe(`/episodes/${episodeId}/recommendations`);
-        expect(response.config.method).toBe('get');              
+        expect(response.config.method).toBe('get');
         expect(response.data.recommendations.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
@@ -244,7 +245,7 @@ test('Test fetchPlaylistById with mock', () => {
         id: playlistId,
     }).then((response) => {
         expect(response.config.url).toBe(`/playlists/${playlistId}`);
-        expect(response.config.method).toBe('get');              
+        expect(response.config.method).toBe('get');
         expect(response.data.items.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
@@ -256,7 +257,7 @@ test('Test fetchMyPlaylists with mock', () => {
     return client.fetchMyPlaylists({
     }).then((response) => {
         expect(response.config.url).toBe('/playlists');
-        expect(response.config.method).toBe('get');              
+        expect(response.config.method).toBe('get');
         expect(response.data.total > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
@@ -270,8 +271,8 @@ test('Test submitPodcast with mock', () => {
         rss,
     }).then((response) => {
         expect(response.config.url).toBe('/podcasts/submit');
-        expect(response.config.method).toBe('post'); 
-        expect(JSON.parse(response.config.data).rss).toBe(rss);                     
+        expect(response.config.method).toBe('post');
+        expect(queryString.parse(response.config.data).rss).toBe(rss);
         expect(response.data.status.length > 0).toBe(true);
     }).catch(() => {
         fail('Failed!');
@@ -287,7 +288,7 @@ test('Test deletePodcast with mock', () => {
         reason,
     }).then((response) => {
         expect(response.config.url).toBe(`/podcasts/${podcastId}?reason=${reason}`);
-        expect(response.config.method).toBe('delete'); 
+        expect(response.config.method).toBe('delete');
         expect(response.data.status.length > 0).toBe(true);
     }).catch((error) => {
         console.log(error);
