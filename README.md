@@ -1,6 +1,6 @@
 # Podcast API JavaScript Library
 
-[![Build Status](https://travis-ci.com/ListenNotes/podcast-api-js.svg?branch=main)](https://travis-ci.com/ListenNotes/podcast-api-js)
+[![Node.js CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml)
 
 The Podcast API JavaScript library provides convenient access to the [Listen Notes Podcast API](https://www.listennotes.com/api/) from
 applications written in server-side JavaScript.
