@@ -41,6 +41,28 @@ client.search({
 //   console.log(error);
 // });
 
+// client.spellcheck({
+//   q: 'evergrand stok',
+// }).then((response) => {
+//   console.log(response.data);
+// }).catch((error) => {
+//   console.log(error);
+// });
+
+// client.fetchRelatedSearches({
+//   q: 'evergrande',
+// }).then((response) => {
+//   console.log(response.data);
+// }).catch((error) => {
+//   console.log(error);
+// });
+
+// client.fetchTrendingSearches().then((response) => {
+//   console.log(response.data);
+// }).catch((error) => {
+//   console.log(error);
+// });
+
 // client.fetchBestPodcasts({
 // }).then((response) => {
 //   console.log(response.data);

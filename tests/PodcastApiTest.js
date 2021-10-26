@@ -57,6 +57,47 @@ test('Test typeahead with mock', () => {
     });
 });
 
+test('Test spellcheck with mock', () => {
+    const client = Client();
+    const term = 'evergrand stok';
+    return client.spellcheck({
+        q: term,
+    }).then((response) => {
+        expect(response.config.params.q).toBe(term);
+        expect(response.config.url).toBe('/spellcheck');
+        expect(response.config.method).toBe('get');
+        expect(response.data.tokens.length > 0).toBe(true);
+    }).catch(() => {
+        fail('Failed!');
+    });
+});
+
+test('Test related searches with mock', () => {
+    const client = Client();
+    const term = 'evergrande';
+    return client.fetchRelatedSearches({
+        q: term,
+    }).then((response) => {
+        expect(response.config.params.q).toBe(term);
+        expect(response.config.url).toBe('/related_searches');
+        expect(response.config.method).toBe('get');
+        expect(response.data.terms.length > 0).toBe(true);
+    }).catch((e) => {
+        fail('Failed!');
+    });
+});
+
+test('Test trending searches with mock', () => {
+    const client = Client();
+    return client.fetchTrendingSearches().then((response) => {
+        expect(response.config.url).toBe('/trending_searches');
+        expect(response.config.method).toBe('get');
+        expect(response.data.terms.length > 0).toBe(true);
+    }).catch(() => {
+        fail('Failed!');
+    });
+});
+
 test('Test fetchBestPodcasts with mock', () => {
     const client = Client();
     const genreId = 123;

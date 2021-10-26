@@ -26,6 +26,12 @@ const Client = (config = {}) => {
 
   this.typeahead = (params) => this.httpClient.get('/typeahead', { params });
 
+  this.spellcheck = (params) => this.httpClient.get('/spellcheck', { params });  
+
+  this.fetchRelatedSearches = (params) => this.httpClient.get('/related_searches', { params }); 
+  
+  this.fetchTrendingSearches = (params) => this.httpClient.get('/trending_searches', { params }); 
+
   this.fetchBestPodcasts = (params) => this.httpClient.get('/best_podcasts', { params });
 
   this.fetchPodcastById = (params) => {
