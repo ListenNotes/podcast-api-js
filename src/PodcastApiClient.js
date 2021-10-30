@@ -37,14 +37,14 @@ const Client = (config = {}) => {
   this.fetchPodcastById = (params) => {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/podcasts/${id}`, {
-      otherParams,
+      params: otherParams,
     });
   };
 
   this.fetchEpisodeById = (params) => {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/episodes/${id}`, {
-      otherParams,
+      params: otherParams,
     });
   };
 
@@ -55,7 +55,7 @@ const Client = (config = {}) => {
   this.fetchCuratedPodcastsListById = (params) => {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/curated_podcasts/${id}`, {
-      otherParams,
+      params: otherParams,
     });
   };
 
@@ -72,21 +72,21 @@ const Client = (config = {}) => {
   this.fetchRecommendationsForPodcast = (params) => {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/podcasts/${id}/recommendations`, {
-      otherParams,
+      params: otherParams,
     });
   };
 
   this.fetchRecommendationsForEpisode = (params) => {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/episodes/${id}/recommendations`, {
-      otherParams,
+      params: otherParams,
     });
   };
 
   this.fetchPlaylistById = (params) => {
     const { id, ...otherParams } = params;
     return this.httpClient.get(`/playlists/${id}`, {
-      otherParams,
+      params: otherParams,
     });
   };
 

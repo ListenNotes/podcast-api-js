@@ -118,7 +118,9 @@ test('Test fetchPodcastById with mock', () => {
     const podcastId = 'abcde';
     return client.fetchPodcastById({
         id: podcastId,
+        sort: 'oldest_first',
     }).then((response) => {
+        expect(response.config.params.sort).toBe('oldest_first');
         expect(response.config.url).toBe(`/podcasts/${podcastId}`);
         expect(response.config.method).toBe('get');
         expect(response.data.episodes.length > 0).toBe(true);
@@ -132,8 +134,10 @@ test('Test fetchEpisodeById with mock', () => {
     const episodeId = 'abc222de';
     return client.fetchEpisodeById({
         id: episodeId,
+        show_transcript: 1,
     }).then((response) => {
         expect(response.config.url).toBe(`/episodes/${episodeId}`);
+        expect(response.config.params.show_transcript).toBe(1);        
         expect(response.config.method).toBe('get');
         expect(response.data.podcast.rss.length > 0).toBe(true);
     }).catch(() => {
