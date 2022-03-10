@@ -18,10 +18,15 @@ client.search({
         // Wrong API key, or your account is suspended
         break;
       case 400:
-        // Invalid parameters
+        // Something wrong on your end (Client side errors),
+        // e.g., missing required parameters.
+        break;
+      case 429:
+        // For FREE plan, exceeding the quota limit; or for all plans,
+        // sending too many requests too fast and exceeding the rate limit.
         break;
       case 500:
-        // Server-side error
+        // Something wrong on our end (Unexpected server errors).
         break;
       default:
         // Unknown errors
