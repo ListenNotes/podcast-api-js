@@ -33,7 +33,7 @@
   "bugs": {
     "url": "https://github.com/ListenNotes/podcast-api-js/issues"
   },
-  "homepage": "https://github.com/ListenNotes/podcast-api-js",
+  "homepage": "https://www.listennotes.com/podcast-api/",
   "dependencies": {
     "axios": "^0.21.1",
     "query-string": "^7.0.1"
