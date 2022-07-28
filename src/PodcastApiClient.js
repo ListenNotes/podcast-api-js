@@ -99,6 +99,13 @@ const Client = (config = {}) => {
     return this.httpClient.delete(`/podcasts/${id}?reason=${reason || ''}`);
   };
 
+  this.fetchAudienceForPodcast = (params) => {
+    const { id, ...otherParams } = params;
+    return this.httpClient.get(`/podcasts/${id}/audience`, {
+      params: otherParams,
+    });
+  };
+
   return this;
 };
 

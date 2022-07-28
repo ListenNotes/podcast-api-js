@@ -340,3 +340,17 @@ test('Test deletePodcast with mock', () => {
         fail('Failed!');
     });
 });
+
+test('Test fetchAudienceForPodcast with mock', () => {
+    const client = Client();
+    const podcastId = 'abcde';
+    return client.fetchAudienceForPodcast({
+        id: podcastId,
+    }).then((response) => {
+        expect(response.config.url).toBe(`/podcasts/${podcastId}/audience`);
+        expect(response.config.method).toBe('get');
+        expect(response.data.by_regions.length > 0).toBe(true);
+    }).catch(() => {
+        fail('Failed!');
+    });
+});
