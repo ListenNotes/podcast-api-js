@@ -26,13 +26,21 @@ const _fetch = (path, config, method = 'GET', queryParams = {}, formParams = nul
     url: path,
     method: method.toLowerCase(),
   };
+  const responseHeaders = {};
   return fetch(url, fetchConfig).then((response) => {
+    if (response.headers) {
+      for (const pair of response.headers.entries()) {
+        responseHeaders[pair[0]] = pair[1];
+      }
+    }
+
     if (response.ok) {
       return response;
     } else {
       const err = new Error(`HTTP ${response.status}`);
       err.response = response;
       err.response.config = responseConfig;
+      err.response.headers = responseHeaders;
       throw err;
     }
   }).then((response) => {
@@ -40,6 +48,7 @@ const _fetch = (path, config, method = 'GET', queryParams = {}, formParams = nul
   }).then((data) => {
     return {
       config: responseConfig,
+      headers: responseHeaders,
       data,
     }
   });
