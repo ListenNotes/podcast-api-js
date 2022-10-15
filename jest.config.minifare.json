@@ -1,0 +1,6 @@
+{
+  "testMatch": [
+    "**/tests/*ForWorkersTest.js"
+  ],
+  "testEnvironment": "miniflare"
+}
