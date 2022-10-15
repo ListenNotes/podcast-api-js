@@ -19,6 +19,18 @@ module.exports = {
         "commonjs": true,
         "es2021": true
       },
-    }
+    },
+    {
+      "files": ["**/*ForWorkers/**/*.js"],
+      "env": {
+        "node": false,
+        "worker": true,
+        "commonjs": true,
+        "es2021": true
+      },
+      "parserOptions": {
+        "sourceType": "module"
+      }
+    },
   ]
 };

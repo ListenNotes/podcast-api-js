@@ -9,7 +9,7 @@
  */
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env, ctx) {  // eslint-disable-line
     const {searchParams} = new URL(request.url);
     let q = searchParams.get('q');
     let type = searchParams.get('type');
