@@ -4,9 +4,9 @@
 
 The Podcast API JavaScript library provides convenient access to the [Listen Notes Podcast API](https://www.listennotes.com/api/) from
 applications written in JavaScript, including 
-* Server-side Node.js: See example code [PodcastAppForNode](https://github.com/ListenNotes/podcast-api-js/tree/cloudflare-workers/examples/PodcastAppForNode)
-* Serverless [Cloudflare Workers](https://workers.cloudflare.com/) / [Cloudflare Pages](https://pages.cloudflare.com/) (w/ [functions](https://developers.cloudflare.com/pages/platform/functions/)): See example code [PodcastAppForWorkers](https://github.com/ListenNotes/podcast-api-js/tree/cloudflare-workers/examples/PodcastAppForWorkers)
-* Client-side Javascript in web browsers: See example code [PodcastAppForBrowser](https://github.com/ListenNotes/podcast-api-js/tree/cloudflare-workers/examples/PodcastAppForBrowser)
+* Server-side Node.js: See example code [PodcastAppForNode](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForNode)
+* Serverless [Cloudflare Workers](https://workers.cloudflare.com/) / [Cloudflare Pages](https://pages.cloudflare.com/) (w/ [functions](https://developers.cloudflare.com/pages/platform/functions/)): See example code [PodcastAppForWorkers](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForWorkers)
+* Client-side Javascript in web browsers: See example code [PodcastAppForBrowser](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForBrowser)
 
 Simple and no-nonsense podcast search & directory API. Search the meta data of all podcasts and episodes by people, places, or topics. It's the same API that powers [the best podcast search engine Listen Notes](https://www.listennotes.com/).
 
@@ -79,7 +79,7 @@ const client = Client({
 
 // If you use our Podcast API with Cloudflare Workers / Pages, then use the ClientForWorkers class.
 // Please make sure you store LISTEN_API_KEY as a secret. See example code: 
-//   - https://github.com/ListenNotes/podcast-api-js/blob/cloudflare-workers/examples/PodcastAppForWorkers/src/index.js
+//   - https://github.com/ListenNotes/podcast-api-js/blob/main/examples/PodcastAppForWorkers/src/index.js
 // const { ClientForWorkers } = require('podcast-api');
 // const client = ClientForWorkers({
 //  apiKey: env.LISTEN_API_KEY || null,
