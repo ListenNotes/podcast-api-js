@@ -3,11 +3,11 @@
 [![Node.js CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml) [![Cloudflare Workers CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/cloudflare-workers.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/cloudflare-workers.yml) [![npm](https://img.shields.io/npm/v/podcast-api)](https://www.npmjs.com/package/podcast-api)
 
 The Podcast API JavaScript library provides convenient access to the [Listen Notes Podcast API](https://www.listennotes.com/api/) from
-applications written in server-side JavaScript.
+applications written in JavaScript, including Node.js, [Cloudflare Workers](https://workers.cloudflare.com/) / [Cloudflare Pages](https://pages.cloudflare.com/) (w/ [functions](https://developers.cloudflare.com/pages/platform/functions/)), and client-side browsers. 
 
 Simple and no-nonsense podcast search & directory API. Search the meta data of all podcasts and episodes by people, places, or topics. It's the same API that powers [the best podcast search engine Listen Notes](https://www.listennotes.com/).
 
-**Note**: We don't recommend using Listen API in client-side JavaScript in the browser, because it'll leak your API key in the code.
+**Note**: We don't recommend using our Podcast API in client-side JavaScript in the browser, because it'll leak your API key in the code.
 
 If you have any questions, please contact [hello@listennotes.com](hello@listennotes.com?subject=Questions+about+the+JS+SDK+of+Listen+API)
 
@@ -68,9 +68,10 @@ value:
 
 <!-- prettier-ignore -->
 ```js
+// If you use our Podcast API with Node.js or browser javascript, then use the Client class.
 const { Client } = require('podcast-api');
 
-// Uncomment the following two lines if you want to run code on Cloudflare Workers
+// If you use our Podcast API with Cloudflare Workers / Pages, then use the ClientForWorkers class.
 // const { ClientForWorkers } = require('podcast-api');
 // const Client = ClientForWorkers
 
@@ -108,7 +109,7 @@ client.search({
 });
 ```
 
-If `apiKey` is null, then we'll connect to a [mock server](https://help.listennotes.com/en/articles/5224500-how-to-test-the-podcast-api-without-an-api-key) that returns fake data for testing purposes.
+If `apiKey` is null, then we'll connect to a [mock server](https://www.listennotes.help/article/48-how-to-test-the-podcast-api-without-an-api-key) that returns fake data for testing purposes.
 
 
 
@@ -117,7 +118,7 @@ If `apiKey` is null, then we'll connect to a [mock server](https://help.listenno
 ## API Reference
 
 Each function is a wrapper to send an HTTP request to the corresponding endpoint on the
-[API Docs](https://www.listennotes.com/podcast-api/docs/).
+[API Docs](https://www.listennotes.com/api/docs/).
 
 
 
