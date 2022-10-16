@@ -70,6 +70,10 @@ value:
 ```js
 const { Client } = require('podcast-api');
 
+// Uncomment the following two lines if you want to run code on Cloudflare Workers
+// const { ClientForWorkers } = require('podcast-api');
+// const Client = ClientForWorkers
+
 const client = Client({
   apiKey: process.env.LISTEN_API_KEY || null,
 });
