@@ -2,7 +2,7 @@
 
 [![Node.js CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml) [![Cloudflare Workers CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/cloudflare-workers.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/cloudflare-workers.yml) [![npm](https://img.shields.io/npm/v/podcast-api)](https://www.npmjs.com/package/podcast-api)
 
-The Podcast API JavaScript library provides convenient access to the [Listen Notes Podcast API](https://www.listennotes.com/podcast-api/) from
+The Podcast API JavaScript library provides convenient access to the [Listen Notes Podcast API](https://www.listennotes.com/api/) from
 applications written in server-side JavaScript.
 
 Simple and no-nonsense podcast search & directory API. Search the meta data of all podcasts and episodes by people, places, or topics. It's the same API that powers [the best podcast search engine Listen Notes](https://www.listennotes.com/).
