@@ -73,14 +73,18 @@ value:
 ```js
 // If you use our Podcast API with Node.js or browser javascript, then use the Client class.
 const { Client } = require('podcast-api');
-
-// If you use our Podcast API with Cloudflare Workers / Pages, then use the ClientForWorkers class.
-// const { ClientForWorkers } = require('podcast-api');
-// const Client = ClientForWorkers
-
 const client = Client({
   apiKey: process.env.LISTEN_API_KEY || null,
 });
+
+// If you use our Podcast API with Cloudflare Workers / Pages, then use the ClientForWorkers class.
+// Please make sure you store LISTEN_API_KEY as a secret. See example code: 
+//   - https://github.com/ListenNotes/podcast-api-js/blob/cloudflare-workers/examples/PodcastAppForWorkers/src/index.js
+// const { ClientForWorkers } = require('podcast-api');
+// const client = ClientForWorkers({
+//  apiKey: env.LISTEN_API_KEY || null,
+// });
+
 
 client.search({
   q: 'elon musk',
