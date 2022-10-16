@@ -1,0 +1,12 @@
+{
+  "name": "podcast-app-for-node",
+  "version": "1.0.0",
+  "main": "sample.js",
+  "license": "MIT",
+  "scripts": {
+    "go": "node app.js"
+  },
+  "dependencies": {
+    "podcast-api": "file:../../"
+  }
+}

@@ -1,13 +1,16 @@
 # Podcast API JavaScript Library
 
-[![Node.js CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml) [![npm](https://img.shields.io/npm/v/podcast-api)](https://www.npmjs.com/package/podcast-api)
+[![Node.js CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml) [![Cloudflare Workers CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/cloudflare-workers.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/cloudflare-workers.yml) [![npm](https://img.shields.io/npm/v/podcast-api)](https://www.npmjs.com/package/podcast-api)
 
-The Podcast API JavaScript library provides convenient access to the [Listen Notes Podcast API](https://www.listennotes.com/podcast-api/) from
-applications written in server-side JavaScript.
+The Podcast API JavaScript library provides convenient access to the [Listen Notes Podcast API](https://www.listennotes.com/api/) from
+applications written in JavaScript, including 
+* Server-side Node.js: See example code [PodcastAppForNode](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForNode)
+* Serverless [Cloudflare Workers](https://workers.cloudflare.com/) / [Cloudflare Pages](https://pages.cloudflare.com/) (w/ [functions](https://developers.cloudflare.com/pages/platform/functions/)): See example code [PodcastAppForWorkers](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForWorkers)
+* Client-side Javascript in web browsers: See example code [PodcastAppForBrowser](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForBrowser)
 
 Simple and no-nonsense podcast search & directory API. Search the meta data of all podcasts and episodes by people, places, or topics. It's the same API that powers [the best podcast search engine Listen Notes](https://www.listennotes.com/).
 
-**Note**: We don't recommend using Listen API in client-side JavaScript in the browser, because it'll leak your API key in the code.
+**Note**: We don't recommend using our Podcast API in client-side JavaScript in the browser, because it'll leak your API key in the code.
 
 If you have any questions, please contact [hello@listennotes.com](hello@listennotes.com?subject=Questions+about+the+JS+SDK+of+Listen+API)
 
@@ -57,7 +60,7 @@ yarn add podcast-api
 
 ### Requirements
 
-- Node 10 or higher
+- Node 18 or higher
 
 ## Usage
 
@@ -68,11 +71,20 @@ value:
 
 <!-- prettier-ignore -->
 ```js
+// If you use our Podcast API with Node.js or browser javascript, then use the Client class.
 const { Client } = require('podcast-api');
-
 const client = Client({
   apiKey: process.env.LISTEN_API_KEY || null,
 });
+
+// If you use our Podcast API with Cloudflare Workers / Pages, then use the ClientForWorkers class.
+// Please make sure you store LISTEN_API_KEY as a secret. See example code: 
+//   - https://github.com/ListenNotes/podcast-api-js/blob/main/examples/PodcastAppForWorkers/src/index.js
+// const { ClientForWorkers } = require('podcast-api');
+// const client = ClientForWorkers({
+//  apiKey: env.LISTEN_API_KEY || null,
+// });
+
 
 client.search({
   q: 'elon musk',
@@ -104,7 +116,7 @@ client.search({
 });
 ```
 
-If `apiKey` is null, then we'll connect to a [mock server](https://help.listennotes.com/en/articles/5224500-how-to-test-the-podcast-api-without-an-api-key) that returns fake data for testing purposes.
+If `apiKey` is null, then we'll connect to a [mock server](https://www.listennotes.help/article/48-how-to-test-the-podcast-api-without-an-api-key) that returns fake data for testing purposes.
 
 
 
@@ -113,7 +125,7 @@ If `apiKey` is null, then we'll connect to a [mock server](https://help.listenno
 ## API Reference
 
 Each function is a wrapper to send an HTTP request to the corresponding endpoint on the
-[API Docs](https://www.listennotes.com/podcast-api/docs/).
+[API Docs](https://www.listennotes.com/api/docs/).
 
 
 
@@ -152,7 +164,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "took": 0.966,
@@ -533,14 +545,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   ],
   "next_offset": 10
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -978,7 +990,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -1014,7 +1026,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "terms": [
@@ -1080,14 +1092,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   ]
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -1188,7 +1200,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -1226,7 +1238,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "id": "4d3fe717742d4963a85562e9f84d8c79",
@@ -1448,14 +1460,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   "update_frequency_hours": 24,
   "listen_score_global_rank": "1%"
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -1770,7 +1782,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -1806,7 +1818,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "id": "6b6d65930c5a4f71b254465871fed370",
@@ -1885,14 +1897,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   "maybe_audio_invalid": false,
   "listennotes_edit_url": "https://www.listennotes.com/e/6b6d65930c5a4f71b254465871fed370/#edit"
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -2204,7 +2216,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -2241,7 +2253,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "languages": [
@@ -2321,14 +2333,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     "Vietnamese"
   ]
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -2375,7 +2387,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -2415,7 +2427,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "genres": [
@@ -2526,14 +2538,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   ]
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -2571,7 +2583,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -2613,7 +2625,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "id": 93,
@@ -3733,14 +3745,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   "next_page_number": 3,
   "previous_page_number": 1
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -4041,7 +4053,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -4078,7 +4090,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "regions": {
@@ -4234,14 +4246,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     "zw": "Zimbabwe"
   }
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -4260,7 +4272,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -4296,7 +4308,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "recommendations": [
@@ -4768,14 +4780,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   ]
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -5023,7 +5035,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -5059,7 +5071,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "recommendations": [
@@ -5273,14 +5285,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   ]
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -5408,7 +5420,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -5445,7 +5457,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "episodes": [
@@ -5503,14 +5515,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   ]
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -5638,7 +5650,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -5681,7 +5693,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "podcasts": [
@@ -6664,14 +6676,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   ],
   "next_episode_pub_date": 1556519451000
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -7038,7 +7050,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -7074,7 +7086,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "id": "a62a0cb1b27b452190a2db339da56d41",
@@ -7102,14 +7114,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   "maybe_audio_invalid": false,
   "listennotes_edit_url": "https://www.listennotes.com/e/a62a0cb1b27b452190a2db339da56d41/#edit"
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -7226,7 +7238,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -7264,7 +7276,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "id": "SDFKduyJ47r",
@@ -8122,14 +8134,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   "source_domain": "www.buzzfeed.com",
   "listennotes_url": "https://www.listennotes.com/curated-podcasts/16-brilliant-indian-podcasts-thatll-SDFKduyJ47r/"
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -8415,7 +8427,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -8452,7 +8464,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "total": 4130,
@@ -9654,14 +9666,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   "next_page_number": 3,
   "previous_page_number": 1
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -9798,7 +9810,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -9835,20 +9847,20 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "status": "in review",
   "podcast": {}
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -9914,7 +9926,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -9951,19 +9963,19 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "status": "in review"
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -9982,7 +9994,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -10014,7 +10026,7 @@ const client = Client({
 });
 
 client.fetchPlaylistById({
-    id: 'm1pe7z60bsw', type: 'episode_list', sort: 'recent_published_first', 
+    id: 'm1pe7z60bsw', type: 'episode_list', sort: 'recent_published_first',
 }).then((response) => {
   console.log(response.data);
 }).catch((error) => {
@@ -10028,7 +10040,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "id": "m1pe7z60bsw",
@@ -10665,14 +10677,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   "last_timestamp_ms": 1564614350360,
   "total_audio_length_sec": 108657
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -11194,7 +11206,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -11232,7 +11244,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "total": 3,
@@ -11280,14 +11292,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   "next_page_number": 2,
   "previous_page_number": 0
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -11387,7 +11399,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -11423,7 +11435,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "terms": [
@@ -11439,14 +11451,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     "Sheryl Sandberg"
   ]
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -11468,7 +11480,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -11504,7 +11516,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "terms": [
@@ -11518,14 +11530,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     "evergrande debt"
   ]
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -11548,7 +11560,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -11584,7 +11596,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "tokens": [
@@ -11601,14 +11613,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
   ],
   "corrected_text_html": "<b><i>evergrande</i></b> <b><i>stock</i></b>"
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -11648,7 +11660,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 
@@ -11684,7 +11696,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
 
 <details>
   <summary>Click to see example response</summary>
-  
+
 ```json
 {
   "by_regions": [
@@ -11922,14 +11934,14 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   ]
 }
-```   
+```
 </details>
 
 
 
 <details>
   <summary>Click to see response schema</summary>
-  
+
 ```json
 {
   "type": "object",
@@ -11954,7 +11966,7 @@ See all available parameters on the [API Docs page](https://www.listennotes.com/
     }
   }
 }
-```   
+```
 </details>
 
 

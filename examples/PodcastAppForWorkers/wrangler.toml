@@ -1,0 +1,5 @@
+name = "podcast-app-for-workers"
+main = "src/index.js"
+compatibility_date = "2022-10-15"
+
+workers_dev = true

@@ -1,0 +1,6 @@
+{
+  "testMatch": [
+    "**/tests/*ForNodeTest.js"
+  ],
+  "testEnvironment": "node"
+}
