@@ -38,9 +38,11 @@ const _fetch = (path, config, method = 'GET', queryParams = {}, formParams = nul
       return response;
     } else {
       const err = new Error(`HTTP ${response.status}`);
-      err.response = response;
-      err.response.config = responseConfig;
-      err.response.headers = responseHeaders;
+      err.response = {
+        status: response.status,
+        config: responseConfig,
+        headers: responseHeaders,
+      };
       throw err;
     }
   }).then((response) => {
