@@ -69,6 +69,11 @@ const addApiMethodsToClient = (client) => {
     return client.httpClient._get(`/podcasts/${id}/audience`, otherParams);
   };
 
+  client.fetchPodcastsByDomain = (params) => {
+    const { domain_name, ...otherParams } = params;
+    return client.httpClient._get(`/podcasts/domains/${domain_name}`, otherParams);
+  };  
+
   return client;
 };
 

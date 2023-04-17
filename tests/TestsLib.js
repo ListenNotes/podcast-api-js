@@ -337,7 +337,7 @@ const runTests = (Client) => {
 
   test('Test fetchAudienceForPodcast with mock', () => {
     const client = Client();
-    const podcastId = 'abcde';
+    const podcastId = 'abcdef';
     return client.fetchAudienceForPodcast({
       id: podcastId,
     }).then((response) => {
@@ -348,6 +348,20 @@ const runTests = (Client) => {
       fail('Failed!');
     });
   });
+
+  test('Test fetchPodcastsByDomain with mock', () => {
+    const client = Client();
+    const domain = 'nytimes.com';
+    return client.fetchPodcastsByDomain({
+      domain_name: domain,
+    }).then((response) => {
+      expect(response.config.url).toBe(`/podcasts/domains/${domain}`);
+      expect(response.config.method).toBe('get');
+      expect(response.data.podcasts.length > 0).toBe(true);
+    }).catch(() => {
+      fail('Failed!');
+    });
+  });  
 };
 
 module.exports = {
