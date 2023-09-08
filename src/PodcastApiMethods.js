@@ -1,6 +1,8 @@
 const addApiMethodsToClient = (client) => {
   client.search = (params) => client.httpClient._get('/search', params);
 
+  client.searchEpisodeTitles = (params) => client.httpClient._get('/search_episode_titles', params);
+
   client.typeahead = (params) => client.httpClient._get('/typeahead', params);
 
   client.spellcheck = (params) => client.httpClient._get('/spellcheck', params);

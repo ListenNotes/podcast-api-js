@@ -38,6 +38,22 @@ const runTests = (Client) => {
     });
   });
 
+  test('Test searchEpisodeTitles endpoint with mock', () => {
+    const client = Client();
+    const term = 'elon musk';
+    return client.searchEpisodeTitles({
+      q: term,
+      podcast_id: 'abcdef',
+    }).then((response) => {
+      expect(response.config.params.q).toBe(term);
+      expect(response.config.url).toBe('/search_episode_titles');
+      expect(response.config.method).toBe('get');
+      expect(response.data.count > 0).toBe(true);
+    }).catch(() => {
+      fail('Failed!');
+    });
+  });  
+
   test('Test typeahead with mock', () => {
     const client = Client();
     const term = 'elon musk2';
