@@ -1,85 +1,41 @@
-const {API_BASE_PROD, API_BASE_TEST, defaultUserAgent} = require('./Constants');
-const {addApiMethodsToClient} = require('./PodcastApiMethods');
+const { API_BASE_PROD, API_BASE_TEST, defaultUserAgent } = require('./Constants');
+const { addApiMethodsToClient } = require('./PodcastApiMethods');
 
-const _fetch = (path, config, method = 'GET', queryParams = {}, formParams = null) => {
+const _fetch = async (path, config, method, queryParams = {}, formParams = null) => {
   let url = `${config.apiKey ? API_BASE_PROD : API_BASE_TEST}${path}`;
   const headers = {
     'X-ListenAPI-Key': config.apiKey || '',
     'User-Agent': config.userAgent || defaultUserAgent,
   };
-  const fetchConfig = {
-    method,
-    headers,
-  };
-  let formParamsString = null;
-  if (formParams) {
-    fetchConfig.body = formParams;
-    formParamsString = [...formParams.entries()].map(
-      x => `${encodeURIComponent(x[0])}=${encodeURIComponent(x[1])}`).join('&');
+  const query = new URLSearchParams(queryParams).toString();
+  if (query) url += `?${query}`;
+  const body = formParams === null ? null : new URLSearchParams(formParams).toString();
+  const fetchConfig = { method, headers };
+  if (body !== null) {
+    fetchConfig.body = body;
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
   }
-  if (queryParams) {
-    url = `${url}?${new URLSearchParams(queryParams).toString()}`
+  const responseConfig = { params: queryParams, data: body, url: path, method: method.toLowerCase() };
+  const response = await fetch(url, fetchConfig);
+  const responseHeaders = Object.fromEntries(response.headers.entries());
+  if (!response.ok) {
+    const error = new Error(`HTTP ${response.status}`);
+    error.response = { status: response.status, config: responseConfig, headers: responseHeaders };
+    throw error;
   }
-  const responseConfig = {
-    params: queryParams,
-    data: formParamsString,
-    url: path,
-    method: method.toLowerCase(),
-  };
-  const responseHeaders = {};
-  return fetch(url, fetchConfig).then((response) => {
-    if (response.headers) {
-      for (const pair of response.headers.entries()) {
-        responseHeaders[pair[0]] = pair[1];
-      }
-    }
-
-    if (response.ok) {
-      return response;
-    } else {
-      const err = new Error(`HTTP ${response.status}`);
-      err.response = {
-        status: response.status,
-        config: responseConfig,
-        headers: responseHeaders,
-      };
-      throw err;
-    }
-  }).then((response) => {
-    return response.json();
-  }).then((data) => {
-    return {
-      config: responseConfig,
-      headers: responseHeaders,
-      data,
-    }
-  });
+  return { config: responseConfig, headers: responseHeaders, data: await response.json() };
 };
 
 const ClientForWorkers = (config = {}) => {
-  this.httpClient = {
-    _get: (path, params) => {
-      return _fetch(path, config, 'GET', params);
-    },
-
-    _post: (path, params) => {
-      let formData = null;
-      if (params && Object.keys(params).length > 0) {
-        formData = new FormData();
-        Object.keys(params).forEach(function (key) {
-          formData.append(key, params[key]);
-        });
-      }
-      return _fetch(path, config, 'POST', {}, formData)
-    },
-
-    _delete: (path) => {
-      return _fetch(path, config, 'DELETE')
-    },
+  // Snapshot configuration so later clients or caller mutations cannot change it.
+  const settings = { ...config };
+  const httpClient = {
+    _get: (path, params) => _fetch(path, settings, 'GET', params),
+    _post: (path, params, query) => _fetch(path, settings, 'POST', query, params),
+    _put: (path, params, query) => _fetch(path, settings, 'PUT', query, params),
+    _delete: (path, params) => _fetch(path, settings, 'DELETE', params),
   };
-  return addApiMethodsToClient(this);
+  return addApiMethodsToClient({ httpClient });
 };
 
-module.exports = {
-  ClientForWorkers,
-};
+module.exports = { ClientForWorkers };

@@ -4,14 +4,12 @@ cache:
   directories:
     - node_modules
 node_js:
-  - '10'
-  - '12'
-  - '14'
-  - '15'
-  - '16'
+  - '22'
+  - '24'
 sudo: false
 install:
-  - yarn install
+  - corepack enable
+  - yarn install --immutable
 script:
   - yarn lint
   - yarn test
