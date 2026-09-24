@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "2.1.0",
+  "version": "3.0.0",
   "operations": [
     {
       "operationId": "search",
@@ -738,7 +738,7 @@
     {
       "operationId": "createPlaylist",
       "func": "createPlaylist",
-      "available_from": "2.1.0",
+      "available_from": "3.0.0",
       "method": "POST",
       "path": "/playlists",
       "parameters": [
@@ -775,7 +775,7 @@
     {
       "operationId": "updatePlaylist",
       "func": "updatePlaylist",
-      "available_from": "2.1.0",
+      "available_from": "3.0.0",
       "method": "PUT",
       "path": "/playlists/{id}",
       "parameters": [
@@ -818,7 +818,7 @@
     {
       "operationId": "addPlaylistItem",
       "func": "addPlaylistItem",
-      "available_from": "2.1.0",
+      "available_from": "3.0.0",
       "method": "POST",
       "path": "/playlists/{id}/items",
       "parameters": [
@@ -854,7 +854,7 @@
     {
       "operationId": "deletePlaylistItem",
       "func": "deletePlaylistItem",
-      "available_from": "2.1.0",
+      "available_from": "3.0.0",
       "method": "DELETE",
       "path": "/playlists/{id}/items/{item_id}",
       "parameters": [
@@ -879,7 +879,7 @@
     {
       "operationId": "updatePlaylistItemNotes",
       "func": "updatePlaylistItemNotes",
-      "available_from": "2.1.0",
+      "available_from": "3.0.0",
       "method": "PUT",
       "path": "/playlists/{id}/items/{item_id}",
       "parameters": [

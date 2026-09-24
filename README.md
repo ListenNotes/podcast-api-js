@@ -72,7 +72,7 @@ yarn add podcast-api
 
 ### Requirements
 
-- Node.js 22 or higher
+- Version 3 requires Node.js 22 or higher.
 
 ## Usage
 
