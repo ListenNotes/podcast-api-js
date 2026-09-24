@@ -34,7 +34,7 @@
   },
   "homepage": "https://www.listennotes.com/api/",
   "dependencies": {
-    "axios": "1.19.0"
+    "axios": "^1.7.9"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
