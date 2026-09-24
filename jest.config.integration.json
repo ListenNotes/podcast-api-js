@@ -1,0 +1,15 @@
+{
+  "testTimeout": 20000,
+  "projects": [
+    {
+      "displayName": "node",
+      "testMatch": ["<rootDir>/tests/integration/*ForNodeTest.js"],
+      "testEnvironment": "node"
+    },
+    {
+      "displayName": "workers",
+      "testMatch": ["<rootDir>/tests/integration/*ForWorkersTest.js"],
+      "testEnvironment": "miniflare"
+    }
+  ]
+}

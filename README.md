@@ -868,7 +868,26 @@ yarn test-workers --runInBand
 yarn lint
 ```
 
-Tests use local mocked transports and do not call the API. Generated methods,
+The default `yarn test`, `yarn test-node`, and `yarn test-workers` commands use
+local mocked transports and do not call the API.
+
+Run the live mock integration suite separately:
+
+```sh
+yarn test-integration
+```
+
+This runs 12 cases through each client: Node (Axios) and Workers (fetch in
+Miniflare). They send real HTTP requests to
+`https://listen-api-test.listennotes.com/api/v2` without an API key, covering
+search, podcast/playlist reads, all five playlist write operations, response
+headers, and a missing route. Requests are restricted to that mock URL, redirects
+are disabled, and requests have a 15-second timeout. The mock returns fixed
+responses; these tests do not verify persistence or production authorization.
+CI runs this suite separately on Node.js 24, so a mock service outage can fail
+the integration job while the offline jobs still pass.
+
+Generated methods,
 `src/api-contract.json`, and marked README sections are maintained by
 `devtools/api-sdks/sync.py` in the Listen Notes monorepo. See its
 `devtools/api-sdks/README.md` for synchronization and release instructions.
