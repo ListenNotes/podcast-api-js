@@ -53,7 +53,7 @@ const runTests = ({ createClient, reset, calls, setStatus }) => {
     await mock.fetchPodcastLanguages();
     await first.search({ q: 'again' });
     expect(calls().map(call => call.headers['X-ListenAPI-Key'])).toEqual(['first-key', 'second-key', '', 'first-key']);
-    expect(calls().map(call => call.headers['User-Agent'])).toEqual(['first-app', 'second-app', 'podcasts-api-js', 'first-app']);
+    expect(calls().map(call => call.headers['User-Agent'])).toEqual(['first-app', 'second-app', 'podcast-api-js', 'first-app']);
     expect(calls()[2].url).toBe('https://listen-api-test.listennotes.com/api/v2/languages');
   });
 
