@@ -3,24 +3,25 @@ const { addApiMethodsToClient } = require('./PodcastApiMethods');
 
 const ClientForNode = (config = {}) => {
   const axios = require('axios');
-
-  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-  this.httpClient = axios.create({
+  const httpClient = axios.create({
     baseURL: config.apiKey ? API_BASE_PROD : API_BASE_TEST,
     timeout: 30000,
     headers: {
       'X-ListenAPI-Key': config.apiKey || '',
       'User-Agent': config.userAgent || defaultUserAgent,
     },
+    // Use the same standard encoding as the Workers transport.
+    paramsSerializer: (params) => new URLSearchParams(params).toString(),
   });
-
-  this.httpClient._get = (path, params) => this.httpClient.get(path, { params });
-  this.httpClient._post = (path, params) => this.httpClient.post(path, new URLSearchParams(params).toString());
-  this.httpClient._delete = (path) => this.httpClient.delete(path);
-
-  return addApiMethodsToClient(this);
+  const formConfig = (params) => ({
+    params,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  });
+  httpClient._get = (path, params) => httpClient.get(path, { params });
+  httpClient._post = (path, params, query) => httpClient.post(path, new URLSearchParams(params).toString(), formConfig(query));
+  httpClient._put = (path, params, query) => httpClient.put(path, new URLSearchParams(params).toString(), formConfig(query));
+  httpClient._delete = (path, params) => httpClient.delete(path, { params });
+  return addApiMethodsToClient({ httpClient });
 };
 
-module.exports = {
-  ClientForNode,
-};
+module.exports = { ClientForNode };
