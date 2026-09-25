@@ -91,9 +91,14 @@ const runTests = ({ createClient, reset, calls, setStatus }) => {
     expect(calls()[0].body).toBe('description=');
   });
 
-  test('missing nested identifiers fail before any request', () => {
+  test.each([
+    ['deletePlaylist', undefined, 'id'],
+    ['deletePlaylist', { id: '' }, 'id'],
+    ['deletePlaylist', { id: null }, 'id'],
+    ['deletePlaylistItem', { id: 'abc' }, 'item_id'],
+  ])('%s rejects missing path identifiers in %p before any request', (method, params, name) => {
     const client = createClient();
-    expect(() => client.deletePlaylistItem({ id: 'abc' })).toThrow('Missing path parameter: item_id');
+    expect(() => client[method](params)).toThrow(`Missing path parameter: ${name}`);
     expect(calls()).toHaveLength(0);
   });
 

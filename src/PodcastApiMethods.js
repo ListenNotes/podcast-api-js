@@ -83,6 +83,9 @@ const addApiMethodsToClient = (client) => {
   client.updatePlaylist = (params = {}) => request(
     client.httpClient, "PUT", "/playlists/{id}",
     {"path": ["id"], "query": [], "body": ["name", "description", "visibility", "type"]}, params);
+  client.deletePlaylist = (params = {}) => request(
+    client.httpClient, "DELETE", "/playlists/{id}",
+    {"path": ["id"], "query": [], "body": []}, params);
   client.addPlaylistItem = (params = {}) => request(
     client.httpClient, "POST", "/playlists/{id}/items",
     {"path": ["id"], "query": [], "body": ["episode_id", "podcast_id", "notes"]}, params);
