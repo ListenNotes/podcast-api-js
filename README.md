@@ -53,6 +53,7 @@ If you have any questions, please contact [hello@listennotes.com](hello@listenno
 - [`fetchPodcastsByDomain`](#fetchpodcastsbydomain) — `GET /podcasts/domains/{domain_name}`
 - [`createPlaylist`](#createplaylist) — `POST /playlists`
 - [`updatePlaylist`](#updateplaylist) — `PUT /playlists/{id}`
+- [`deletePlaylist`](#deleteplaylist) — `DELETE /playlists/{id}`
 - [`addPlaylistItem`](#addplaylistitem) — `POST /playlists/{id}/items`
 - [`deletePlaylistItem`](#deleteplaylistitem) — `DELETE /playlists/{id}/items/{item_id}`
 - [`updatePlaylistItemNotes`](#updateplaylistitemnotes) — `PUT /playlists/{id}/items/{item_id}`
@@ -782,6 +783,31 @@ client.updatePlaylist({
 ```
 
 [Full API documentation](https://www.listennotes.com/api/docs/#put-api-v2-playlists-id)
+
+### deletePlaylist
+
+Delete a playlist.
+
+`DELETE /playlists/{id}`
+
+Permanently delete a playlist, including all episode and podcast references saved in this specific playlist and their notes. The actual episodes and podcasts remain in the Listen Notes podcast database.
+
+**Warning: Deletion cannot be undone. Once deleted, the playlist is gone, regardless of how many episodes or podcasts it contains. You, the developer, are responsible for adding a confirmation step in your app's UI before calling this endpoint to prevent accidental deletion.**
+
+Only playlists owned by your admin API account can be modified; contributor membership does not grant write access.
+
+```javascript
+const { Client } = require('podcast-api');
+const client = Client({ apiKey: process.env.LISTEN_API_KEY || null });
+
+client.deletePlaylist({
+  "id": "m1pe7z60bsw"
+})
+  .then((response) => console.log(response.data))
+  .catch((error) => console.error(error));
+```
+
+[Full API documentation](https://www.listennotes.com/api/docs/#delete-api-v2-playlists-id)
 
 ### addPlaylistItem
 

@@ -124,6 +124,14 @@ const runIntegrationTests = ({ createClient, calls, reset }) => {
     expect(calls()[0].body).toBeFalsy();
   });
 
+  test('delete a playlist', async () => {
+    const response = await client.deletePlaylist({ id: PLAYLIST_ID });
+    const payload = responseData(response, 'DELETE', `/playlists/${PLAYLIST_ID}`);
+    expect(payload).toEqual({ id: PLAYLIST_ID, deleted: true });
+    expect(new URL(calls()[0].url).search).toBe('');
+    expect(calls()[0].body).toBeFalsy();
+  });
+
   test('missing routes preserve the HTTP 404 error', async () => {
     await expect(client.httpClient._get('/sdk-integration-missing-route', {})).rejects.toMatchObject({
       response: { status: 404 },
