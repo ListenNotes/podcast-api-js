@@ -2,6 +2,8 @@
 
 Search podcasts and episodes, generate speaker-labeled transcripts on demand, and access podcast audience insights with the official Listen Notes SDK for Node.js and Cloudflare Workers. [Listen Notes Podcast API](https://www.listennotes.com/api/)
 
+You can also discover podcasts in ChatGPT, Claude, or another compatible AI assistant without writing code. [Connect the official Podcast MCP](https://www.listennotes.com/api/mcp/).
+
 [![Node.js CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml) [![Cloudflare Workers CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/cloudflare-workers.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/cloudflare-workers.yml) [![npm](https://img.shields.io/npm/v/podcast-api)](https://www.npmjs.com/package/podcast-api)
 
 ## Installation
