@@ -1,14 +1,14 @@
 /* global beforeAll, afterAll, jest */
 const { ClientForWorkers } = require('../src/PodcastApiClient');
-const { runTests } = require('./TestsLib');
+const { defaultResponse, runTests } = require('./TestsLib');
 const recorded = [];
-let status = 200;
+let fixture = defaultResponse;
 
 beforeAll(() => {
   jest.spyOn(globalThis, 'fetch').mockImplementation(async (url, config) => {
     recorded.push({ url, method: config.method, body: config.body, headers: config.headers });
-    return new Response(JSON.stringify({ ok: true }), {
-      status, headers: { 'Content-Type': 'application/json', 'x-listenapi-usage': '42' },
+    return new Response(JSON.stringify(fixture.data), {
+      status: fixture.status, headers: { 'Content-Type': 'application/json', ...fixture.headers },
     });
   });
 });
@@ -16,7 +16,7 @@ afterAll(() => jest.restoreAllMocks());
 
 runTests({
   createClient: ClientForWorkers,
-  reset: () => { recorded.length = 0; status = 200; },
+  reset: () => { recorded.length = 0; fixture = defaultResponse; },
   calls: () => recorded,
-  setStatus: (value) => { status = value; },
+  setResponse: (value) => { fixture = { ...defaultResponse, ...value }; },
 });

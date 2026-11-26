@@ -95,6 +95,18 @@ const addApiMethodsToClient = (client) => {
   client.updatePlaylistItemNotes = (params = {}) => request(
     client.httpClient, "PUT", "/playlists/{id}/items/{item_id}",
     {"path": ["id", "item_id"], "query": [], "body": ["notes"]}, params);
+  client.estimateEpisodeTranscription = (params = {}) => request(
+    client.httpClient, "GET", "/episodes/{id}/transcript/estimate",
+    {"path": ["id"], "query": [], "body": []}, params);
+  client.transcribeEpisode = (params = {}) => request(
+    client.httpClient, "POST", "/episodes/{id}/transcript",
+    {"path": ["id"], "query": [], "body": []}, params);
+  client.getEpisodeTranscript = (params = {}) => request(
+    client.httpClient, "GET", "/episodes/{id}/transcript",
+    {"path": ["id"], "query": [], "body": []}, params);
+  client.listTranscripts = (params = {}) => request(
+    client.httpClient, "GET", "/transcripts",
+    {"path": [], "query": ["limit", "cursor"], "body": []}, params);
   return client;
 };
 
