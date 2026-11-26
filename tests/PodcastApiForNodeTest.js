@@ -4,10 +4,10 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const { Client, ClientForNode, ClientForWorkers } = require('../src/PodcastApiClient');
-const { runTests } = require('./TestsLib');
+const { defaultResponse, runTests } = require('./TestsLib');
 const contract = require('../src/api-contract.json');
 const recorded = [];
-let status = 200;
+let fixture = defaultResponse;
 
 // An accidental unmocked request must fail instead of reaching any API server.
 beforeAll(() => {
@@ -24,9 +24,9 @@ runTests({
         url: client.httpClient.getUri(request),
         method: request.method.toUpperCase(), body: request.data, headers: request.headers,
       });
-      const response = { status, data: { ok: true }, headers: { 'x-listenapi-usage': '42' }, config: request };
-      if (status >= 400) {
-        const error = new Error(`HTTP ${status}`);
+      const response = { ...fixture, config: request };
+      if (response.status >= 400) {
+        const error = new Error(`HTTP ${response.status}`);
         error.response = response;
         throw error;
       }
@@ -34,9 +34,9 @@ runTests({
     };
     return client;
   },
-  reset: () => { recorded.length = 0; status = 200; },
+  reset: () => { recorded.length = 0; fixture = defaultResponse; },
   calls: () => recorded,
-  setStatus: (value) => { status = value; },
+  setResponse: (value) => { fixture = { ...defaultResponse, ...value }; },
 });
 
 test('public client exports are preserved', () => {

@@ -2,8 +2,10 @@
 const contract = require('../src/api-contract.json');
 const { request } = require('../src/Request');
 
+const defaultResponse = { status: 200, data: { ok: true }, headers: { 'x-listenapi-usage': '42' } };
+
 // Both transports run this contract suite. All responses are supplied locally.
-const runTests = ({ createClient, reset, calls, setStatus }) => {
+const runTests = ({ createClient, reset, calls, setResponse }) => {
   beforeEach(reset);
 
   test.each(contract.operations.map(op => [op.func, op]))('%s follows its generated API contract', async (_, operation) => {
@@ -102,12 +104,65 @@ const runTests = ({ createClient, reset, calls, setStatus }) => {
     expect(calls()).toHaveLength(0);
   });
 
+  test.each([
+    [202, 'queued'],
+    [200, 'completed'],
+  ])('transcription submission accepts HTTP %i without a request body', async (status, jobStatus) => {
+    const data = { status: jobStatus, transcription_id: 'job-1' };
+    setResponse({ status, data });
+    const response = await createClient().transcribeEpisode({ id: 'episode-1' });
+    expect(response.data).toEqual(data);
+    expect(calls()[0]).toMatchObject({
+      method: 'POST',
+      url: 'https://listen-api-test.listennotes.com/api/v2/episodes/episode-1/transcript',
+      body: '',
+    });
+  });
+
+  test('transcription polling exposes Retry-After and terminal status in the payload', async () => {
+    const client = createClient();
+    setResponse({ data: { status: 'processing' }, headers: { 'retry-after': '30' } });
+    const pending = await client.getEpisodeTranscript({ id: 'episode-1' });
+    expect(pending.data.status).toBe('processing');
+    expect(pending.headers['retry-after']).toBe('30');
+
+    const failed = {
+      status: 'failed',
+      error: { code: 'transcription_timeout' },
+      billing_this_transcription: { billable_minutes: null, amount_cents: null },
+    };
+    setResponse({ data: failed });
+    expect((await client.getEpisodeTranscript({ id: 'episode-1' })).data).toEqual(failed);
+  });
+
+  test('polling again returns fresh signed download URLs', async () => {
+    const client = createClient();
+    const download = (signature) => ({
+      status: 'completed',
+      download_urls: { txt: `https://example.test/transcript.txt?code=${signature}` },
+    });
+    setResponse({ data: download('first') });
+    expect((await client.getEpisodeTranscript({ id: 'episode-1' })).data).toEqual(download('first'));
+    setResponse({ data: download('second') });
+    expect((await client.getEpisodeTranscript({ id: 'episode-1' })).data).toEqual(download('second'));
+    expect(calls()).toHaveLength(2);
+  });
+
+  test('listTranscripts sends an opaque cursor in the query and preserves a terminal null cursor', async () => {
+    const cursor = 'opaque+/=';
+    setResponse({ data: { transcripts: [], next_cursor: null } });
+    const { data } = await createClient().listTranscripts({ limit: 20, cursor });
+    expect(data).toEqual({ transcripts: [], next_cursor: null });
+    expect(Object.fromEntries(new URL(calls()[0].url).searchParams)).toEqual({ limit: '20', cursor });
+    expect(calls()[0].body).toBeFalsy();
+  });
+
   test.each([400, 401, 403, 404, 429, 500])('HTTP %i preserves the error response envelope', async (status) => {
-    setStatus(status);
+    setResponse({ status });
     await expect(createClient({ apiKey: 'test-key' }).search({ q: 'test' })).rejects.toMatchObject({
       response: { status, headers: { 'x-listenapi-usage': '42' }, config: { method: 'get', url: '/search' } },
     });
   });
 };
 
-module.exports = { runTests };
+module.exports = { defaultResponse, runTests };

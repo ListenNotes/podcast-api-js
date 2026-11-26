@@ -1,28 +1,92 @@
-# Podcast API JavaScript Library
+# Podcast API for JavaScript
+
+Search podcasts and episodes, generate speaker-labeled transcripts on demand, and access podcast audience insights with the official Listen Notes SDK for Node.js and Cloudflare Workers. [Listen Notes Podcast API](https://www.listennotes.com/api/)
 
 [![Node.js CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/node.js.yml) [![Cloudflare Workers CI](https://github.com/ListenNotes/podcast-api-js/actions/workflows/cloudflare-workers.yml/badge.svg)](https://github.com/ListenNotes/podcast-api-js/actions/workflows/cloudflare-workers.yml) [![npm](https://img.shields.io/npm/v/podcast-api)](https://www.npmjs.com/package/podcast-api)
 
-The Podcast API JavaScript library provides convenient access to the [Listen Notes Podcast API](https://www.listennotes.com/api/) from
-applications written in JavaScript, including 
-* Server-side Node.js: See example code [PodcastAppForNode](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForNode)
-* Serverless [Cloudflare Workers](https://workers.cloudflare.com/) / [Cloudflare Pages](https://pages.cloudflare.com/) (w/ [functions](https://developers.cloudflare.com/pages/platform/functions/)): See example code [PodcastAppForWorkers](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForWorkers)
-* Client-side Javascript in web browsers: See example code [PodcastAppForBrowser](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForBrowser)
+## Installation
 
-Simple and no-nonsense podcast search & directory API. Search the meta data of all podcasts and episodes by people, places, or topics. It's the same API that powers [the best podcast search engine Listen Notes](https://www.listennotes.com/).
+```sh
+npm install podcast-api
+```
 
-**Note**: We don't recommend using our Podcast API in client-side JavaScript in the browser, because it'll leak your API key in the code.
+Version 3 requires Node.js 22 or later. The transcription methods are available in version 3.2.0 and later. [Package on npm](https://www.npmjs.com/package/podcast-api)
 
-If you have any questions, please contact [hello@listennotes.com](hello@listennotes.com?subject=Questions+about+the+JS+SDK+of+Listen+API)
+## Podcast transcription quickstart
 
-<a href="https://www.listennotes.com/api/"><img src="https://raw.githubusercontent.com/ListenNotes/ListenApiDemo/master/web/src/powered_by_listennotes.png" width="300" /></a>
+Use the transcription API to estimate the cost of transcribing an episode, request a transcript, check its status, and list completed transcripts. This example uses the mock API without a key or transcription charges. It returns fixed sample data and placeholder download links. [Mock API guide](https://www.listennotes.help/article/48-how-to-test-the-podcast-api-without-an-api-key)
 
+```js
+const { Client } = require('podcast-api');
+const client = Client();
 
-**Table of Contents**
-- [Podcast API JavaScript Library](#podcast-api-javascript-library)
-  - [Installation](#installation)
-    - [Requirements](#requirements)
-  - [Usage](#usage)
-  - [API Reference](#api-reference)
+async function main() {
+  const id = 'dc09fd798802477b8dba0ca1e10134fa';
+
+  const { data: estimate } = await client.estimateEpisodeTranscription({ id });
+  console.log('Estimated charge in cents', estimate.billing_this_transcription.amount_cents);
+
+  const { data: job } = await client.transcribeEpisode({ id });
+  console.log('Submission status', job.status);
+
+  const { data: transcript } = await client.getEpisodeTranscript({ id });
+  console.log('Available downloads', transcript.download_urls);
+
+  const { data: page } = await client.listTranscripts({ limit: 20 });
+  console.log('Completed transcripts', page.transcripts);
+}
+
+main().catch((error) => {
+  console.error(error.message);
+  process.exitCode = 1;
+});
+```
+
+### Request a live transcript
+
+Enable transcription and set up billing in your API dashboard. Use `Client({ apiKey })` with a key stored on your server. With a real key, `transcribeEpisode` can start a billable transcription. Check the estimate first. [Transcription settings](https://www.listennotes.com/api/dashboard/#transcription) · [Transcription pricing](https://www.listennotes.com/api/pricing/#on-demand-transcription)
+
+Poll `getEpisodeTranscript({ id })` until `response.data.status` is `completed` or `failed`. While the job is queued or processing, wait the number of seconds in the `Retry-After` response header before polling again. The completed response includes signed download URLs in `download_urls`. [Transcription status and downloads](https://www.listennotes.com/api/docs/#get-api-v2-episodes-id-transcript)
+
+Pass `next_cursor` from the previous response as `cursor` in the next `listTranscripts` call. A null cursor marks the last page.
+
+## Search podcasts and episodes
+
+Use `search` to find podcasts and episodes by topic, person, or keyword. This example connects to the mock API when `LISTEN_API_KEY` is unset.
+
+```js
+const { Client } = require('podcast-api');
+const client = Client({ apiKey: process.env.LISTEN_API_KEY || null });
+
+client.search({ q: 'science fiction', type: 'episode' })
+  .then(({ data }) => console.log(data.results))
+  .catch((error) => console.error(error.message));
+```
+
+Use `ClientForWorkers({ apiKey: env.LISTEN_API_KEY })` in Cloudflare Workers or Pages Functions. Store the key as a secret and call the same SDK methods. Keep API keys on the server. [Node.js example](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForNode) · [Cloudflare Workers example](https://github.com/ListenNotes/podcast-api-js/tree/main/examples/PodcastAppForWorkers)
+
+## Frequently asked questions
+
+### Can I generate a transcript for a podcast episode?
+
+Yes. Use the podcast transcription API with the episode's Listen Notes ID. If the publisher supplied an existing transcript, PRO and ENTERPRISE accounts can retrieve it with `fetchEpisodeById({ id, show_transcript: 1 })`. [Podcast transcription FAQ](https://www.listennotes.com/api/faq/#faq20)
+
+### Does the transcription API identify speakers?
+
+Yes. When the API detects multiple speakers, TXT, SRT, and VTT outputs label who spoke. A TXT transcript can look like this.
+
+```text
+Speaker A: Thanks for joining us.
+Speaker B: Happy to be here.
+```
+
+Word-level JSON includes start and end timestamps in milliseconds and a speaker ID for each word when available.
+
+### Can I store downloaded transcripts?
+
+You can store the transcript text generated for your account. The signed links expire after 15 minutes. Call `getEpisodeTranscript` again for fresh links. [API caching FAQ](https://www.listennotes.com/api/faq/#faq7)
+
+## API Reference
 
 <!-- BEGIN GENERATED METHOD INDEX -->
 
@@ -57,84 +121,12 @@ If you have any questions, please contact [hello@listennotes.com](hello@listenno
 - [`addPlaylistItem`](#addplaylistitem) — `POST /playlists/{id}/items`
 - [`deletePlaylistItem`](#deleteplaylistitem) — `DELETE /playlists/{id}/items/{item_id}`
 - [`updatePlaylistItemNotes`](#updateplaylistitemnotes) — `PUT /playlists/{id}/items/{item_id}`
+- [`estimateEpisodeTranscription`](#estimateepisodetranscription) — `GET /episodes/{id}/transcript/estimate`
+- [`transcribeEpisode`](#transcribeepisode) — `POST /episodes/{id}/transcript`
+- [`getEpisodeTranscript`](#getepisodetranscript) — `GET /episodes/{id}/transcript`
+- [`listTranscripts`](#listtranscripts) — `GET /transcripts`
 
 <!-- END GENERATED METHOD INDEX -->
-
-
-## Installation
-
-Install [the official NPM package](https://www.npmjs.com/package/podcast-api) of the Listen Notes Podcast API:
-```sh
-npm install podcast-api --save
-# or
-yarn add podcast-api
-```
-
-
-### Requirements
-
-- Version 3 requires Node.js 22 or higher.
-
-## Usage
-
-The library needs to be configured with your account's API key which is
-available in your [Listen API Dashboard](https://www.listennotes.com/podcast-api/dashboard/#apps). Set `apiKey` to its
-value:
-
-
-<!-- prettier-ignore -->
-```js
-// If you use our Podcast API with Node.js or browser javascript, then use the Client class.
-const { Client } = require('podcast-api');
-const client = Client({
-  apiKey: process.env.LISTEN_API_KEY || null,
-});
-
-// If you use our Podcast API with Cloudflare Workers / Pages, then use the ClientForWorkers class.
-// Please make sure you store LISTEN_API_KEY as a secret. See example code: 
-//   - https://github.com/ListenNotes/podcast-api-js/blob/main/examples/PodcastAppForWorkers/src/index.js
-// const { ClientForWorkers } = require('podcast-api');
-// const client = ClientForWorkers({
-//  apiKey: env.LISTEN_API_KEY || null,
-// });
-
-
-client.search({
-  q: 'elon musk',
-}).then((response) => {
-  console.log(response.data);
-}).catch((error) => {
-  if (error.response) {
-    switch (error.response.status) {
-      case 404:
-        // Endpoint not exist or podcast / episode not exist
-        break;
-      case 401:
-        // Wrong API key, or your account is suspended
-        break;
-      case 400:
-        // Invalid parameters
-        break;
-      case 500:
-        // Server-side error
-        break;
-      default:
-        // Unknown errors
-        break;
-    }
-  } else {
-    // Failed to connect to Listen API servers
-  }
-  console.log(error);
-});
-```
-
-If `apiKey` is null, then we'll connect to a [mock server](https://www.listennotes.help/article/48-how-to-test-the-podcast-api-without-an-api-key) that returns fake data for testing purposes.
-
-
-
-
-## API Reference
 
 <!-- BEGIN GENERATED API REFERENCE -->
 
@@ -375,7 +367,11 @@ Fetch detailed meta data for an episode by id
 
 `GET /episodes/{id}`
 
-Fetch detailed meta data for a specific episode.
+Fetch detailed metadata for a specific episode.
+
+Existing episode transcripts are already available on Listen Notes and include transcripts supplied by podcast producers. About 12% of new episodes and over 3% of all episodes have an existing transcript. Retrieve one with `show_transcript=1` on PRO and ENTERPRISE.
+
+If an episode has no transcript, use `POST /episodes/{id}/transcript` to request on-demand transcription on any plan.
 
 ```javascript
 const { Client } = require('podcast-api');
@@ -881,6 +877,130 @@ client.updatePlaylistItemNotes({
 
 [Full API documentation](https://www.listennotes.com/api/docs/#put-api-v2-playlists-id-items-item_id)
 
+### estimateEpisodeTranscription
+
+Estimate episode transcription cost
+
+`GET /episodes/{id}/transcript/estimate`
+
+Get an informational estimate using episode duration metadata, your remaining quota, and your account's per-minute overage rate. This does not start transcription or reserve quota.
+
+`transcription_quota_this_cycle` shows the included and remaining minutes. `billing_this_transcription.amount_cents` is the estimated fee for minutes beyond the remaining quota. It is 0 when the estimate fits within the quota.
+
+The final fee uses the audio duration measured by the model, the quota available when transcription completes, and the per-minute rate saved when the request is accepted.
+
+If duration metadata is unavailable, `estimate`, `billing_this_transcription.billable_minutes`, and `billing_this_transcription.amount_cents` are null. You can request an estimate before enabling Transcription or adding a payment method. Normal API request accounting applies.
+
+```javascript
+const { Client } = require('podcast-api');
+const client = Client({ apiKey: process.env.LISTEN_API_KEY || null });
+
+client.estimateEpisodeTranscription({
+  "id": "dc09fd798802477b8dba0ca1e10134fa"
+})
+  .then((response) => console.log(response.data))
+  .catch((error) => console.error(error));
+```
+
+[Full API documentation](https://www.listennotes.com/api/docs/#get-api-v2-episodes-id-transcript-estimate)
+
+### transcribeEpisode
+
+Request episode transcription
+
+`POST /episodes/{id}/transcript`
+
+Generate speaker-labeled transcripts for a podcast episode on demand. The request runs asynchronously. Ensure Transcription is enabled and a payment method is added in the [API dashboard](https://www.listennotes.com/api/dashboard/#transcription). Eligible paid accounts may use their existing invoicing arrangement.
+
+**On-demand transcription can incur fees. This example uses the mock API. Configure a server-side API key only when you intend to request live transcription.**
+
+See the [API pricing page](https://www.listennotes.com/api/pricing/#on-demand-transcription) for included minutes and rates. Use the estimate endpoint to check your account's quota and estimated charge.
+
+Returns HTTP 202 for a queued or processing request, or HTTP 200 if a completed transcript already exists for this API account. Repeating a pending or completed request reuses it without another transcription charge. If transcription fails, you may request it again. Up to three pending requests are allowed per API account by default.
+
+Both responses include `transcription_quota_this_cycle` and `billing_this_transcription`. HTTP 202 includes `estimate`, which is null when duration metadata is unavailable. HTTP 200 includes the measured duration and completion time. Use the polling endpoint for signed download URLs.
+
+Poll GET /episodes/{id}/transcript, or [configure a webhook in the dashboard](https://www.listennotes.com/api/dashboard/#webhooks) to receive `episode_transcription.completed` or `episode_transcription.failed`. Webhooks are optional; there is no webhook URL parameter on this operation.
+
+The processing deadline is 15 minutes when estimated audio length is under 60 minutes or unknown, otherwise 25% of estimated audio length. Failed and timed-out transcriptions are not charged a transcription fee.
+
+The per-minute rate is saved when the request is accepted. When a transcription succeeds, we round the measured audio duration up to a whole minute. Only minutes beyond the included quota incur a transcription fee. Disabling Transcription blocks new requests. Accepted requests continue processing.
+
+No request body is required. Normal API request accounting applies even when the transcription fee is zero.
+
+```javascript
+const { Client } = require('podcast-api');
+const client = Client({ apiKey: null });
+
+client.transcribeEpisode({
+  "id": "1871d978bdc648588441bc5649857ddb"
+})
+  .then((response) => console.log(response.data))
+  .catch((error) => console.error(error));
+```
+
+[Full API documentation](https://www.listennotes.com/api/docs/#post-api-v2-episodes-id-transcript)
+
+### getEpisodeTranscript
+
+Get episode transcription status and downloads
+
+`GET /episodes/{id}/transcript`
+
+Poll the transcription requested by your API account for this episode. Returns HTTP 200 for queued, processing, completed, and failed states. Only your API account's requests are accessible.
+
+Queued and processing responses include the same quota, billing, and estimate fields as HTTP 202 from POST, plus a `Retry-After` header of 30 seconds. Completed responses include actual duration, `billing_this_transcription`, `transcription_quota_this_cycle`, and all available TXT, SRT, VTT, and word-level JSON download URLs. Failed responses include `error.code`, such as `transcription_timeout`, and null billing minutes and amount.
+
+Signed URLs in `download_urls` are valid for 15 minutes and share the UTC expiration time in `download_url_expired_date`. Anyone holding a valid URL can download the file without an API key. Poll again for fresh URLs.
+
+Transcription uses speaker diarization to distinguish voices. When multiple speakers are detected, TXT, SRT, and VTT use speaker labels. A TXT download places the label before the spoken text.
+
+```
+Speaker A: Thanks for joining us.
+
+Speaker B: Happy to be here.
+```
+
+Word-level JSON includes start and end timestamps in milliseconds and a `speaker` ID for each word, or `null` when a label is unavailable.
+
+If multiple attempts exist, an existing completed transcript remains available until a replacement succeeds. Otherwise the latest request is returned. This operation does not initiate transcription.
+
+```javascript
+const { Client } = require('podcast-api');
+const client = Client({ apiKey: process.env.LISTEN_API_KEY || null });
+
+client.getEpisodeTranscript({
+  "id": "1871d978bdc648588441bc5649857ddb"
+})
+  .then((response) => console.log(response.data))
+  .catch((error) => console.error(error));
+```
+
+[Full API documentation](https://www.listennotes.com/api/docs/#get-api-v2-episodes-id-transcript)
+
+### listTranscripts
+
+List completed episode transcripts
+
+`GET /transcripts`
+
+List your API account's completed transcripts, newest completion first. Queued, processing, failed, and superseded attempts are excluded.
+
+Follow `next_cursor` until it is null. Cursors are opaque and belong to this API account. Each item contains a `billing_this_transcription` summary. Fetch its `transcript_url` from the API server for quota details and fresh signed download URLs.
+
+```javascript
+const { Client } = require('podcast-api');
+const client = Client({ apiKey: process.env.LISTEN_API_KEY || null });
+
+client.listTranscripts({
+  "limit": 20
+})
+  .then((response) => console.log(response.data))
+  .catch((error) => console.error(error));
+```
+
+[Full API documentation](https://www.listennotes.com/api/docs/#get-api-v2-transcripts)
+
 <!-- END GENERATED API REFERENCE -->
 
 ## Development
@@ -903,11 +1023,11 @@ Run the live mock integration suite separately:
 yarn test-integration
 ```
 
-This runs 12 cases through each client: Node (Axios) and Workers (fetch in
+This runs the same cases through each client: Node (Axios) and Workers (fetch in
 Miniflare). They send real HTTP requests to
 `https://listen-api-test.listennotes.com/api/v2` without an API key, covering
-search, podcast/playlist reads, all five playlist write operations, response
-headers, and a missing route. Requests are restricted to that mock URL, redirects
+search, podcast and playlist requests, transcription, response headers, and a
+missing route. Requests are restricted to that mock URL, redirects
 are disabled, and requests have a 15-second timeout. The mock returns fixed
 responses; these tests do not verify persistence or production authorization.
 CI runs this suite separately on Node.js 24, so a mock service outage can fail
@@ -920,3 +1040,5 @@ Generated methods,
 Edit the canonical OpenAPI specification or SDK registry there, then regenerate.
 The transport implementations and README content outside generation markers
 remain handwritten. The package and tests run independently of that generator.
+
+For SDK questions, [email Listen Notes](mailto:hello@listennotes.com).

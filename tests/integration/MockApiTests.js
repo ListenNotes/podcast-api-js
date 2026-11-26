@@ -5,6 +5,8 @@ const PLAYLIST_ID = 'm1pe7z60bsw';
 const ITEM_ID = 23;
 const EPISODE_ID = 'e73b7e5695b44ab9b6c9ae6b7e0ac6e0';
 const PODCAST_ID = '4d3fe717742d4963a85562e9f84d8c79';
+const TRANSCRIPTION_EPISODE_ID = 'dc09fd798802477b8dba0ca1e10134fa';
+const TRANSCRIPTION_PATH = `/episodes/${TRANSCRIPTION_EPISODE_ID}/transcript`;
 
 // Check the destination before either transport opens a network connection.
 const checkMockRequest = (url, headers) => {
@@ -130,6 +132,37 @@ const runIntegrationTests = ({ createClient, calls, reset }) => {
     expect(payload).toEqual({ id: PLAYLIST_ID, deleted: true });
     expect(new URL(calls()[0].url).search).toBe('');
     expect(calls()[0].body).toBeFalsy();
+  });
+
+  test('estimate episode transcription cost', async () => {
+    const response = await client.estimateEpisodeTranscription({ id: TRANSCRIPTION_EPISODE_ID });
+    const payload = responseData(response, 'GET', `${TRANSCRIPTION_PATH}/estimate`);
+    expect(payload.billing_this_transcription.amount_cents).toEqual(expect.any(Number));
+    expect(payload.transcription_quota_this_cycle.remaining_quota_minutes).toEqual(expect.any(Number));
+  });
+
+  test('submit a transcription request with an empty body', async () => {
+    const response = await client.transcribeEpisode({ id: TRANSCRIPTION_EPISODE_ID });
+    const payload = responseData(response, 'POST', TRANSCRIPTION_PATH, 202);
+    expect(payload.status).toBe('queued');
+    expect(payload.transcription_id).toEqual(expect.any(String));
+    expect(calls()[0].body).toBeFalsy();
+  });
+
+  test('get a completed transcription and signed download links', async () => {
+    const response = await client.getEpisodeTranscript({ id: TRANSCRIPTION_EPISODE_ID });
+    const payload = responseData(response, 'GET', TRANSCRIPTION_PATH);
+    expect(payload.status).toBe('completed');
+    expect(payload.download_urls).toMatchObject({ txt: expect.any(String), json: expect.any(String) });
+    expect(payload.download_url_expired_date).toEqual(expect.any(String));
+  });
+
+  test('list completed transcriptions', async () => {
+    const response = await client.listTranscripts({ limit: 20 });
+    const payload = responseData(response, 'GET', '/transcripts');
+    expect(payload.transcripts[0].transcript_url).toEqual(expect.any(String));
+    expect(payload.next_cursor).toBeNull();
+    expect(new URL(calls()[0].url).searchParams.get('limit')).toBe('20');
   });
 
   test('missing routes preserve the HTTP 404 error', async () => {
